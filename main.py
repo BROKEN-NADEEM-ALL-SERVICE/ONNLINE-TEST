@@ -18,13 +18,13 @@ def display_animated_logo():
     clear_screen()
     logo_lines = [
         (" _          _______    ______     _______    _______    _______        _______    _         ", Fore.YELLOW),
-        ("( (    /|  (  ___  )  (  __  \   (  ____ \  (  ____ \  (       )      (  ___  )  ( \        \   /", Fore.YELLOW),
-        ("|  \  ( |  | (   ) |  | (  \  )  | (    \/  | (    \/  | () () |      | (   ) |  | (           ) (   ", Fore.GREEN),
-        ("|   \ | |  | () |  | |   ) |  | (      | (      | || || |      | () |  | |           | |   ", Fore.CYAN),
-        ("| (\ \) |  |  ___  |  | |   | |  |  __)     |  __)     | |()| |      |  ___  |  | |           | |   ", Fore.CYAN),
-        ("| | \   |  | (   ) |  | |   ) |  | (        | (        | |   | |      | (   ) |  | |           | |   ", Fore.GREEN),
-        ("| )  \  |  | )   ( |  | (/  )  | (/\  | (/\  | )   ( |      | )   ( |  | (/\ ) (", Fore.YELLOW),
-        ("|/    ))  |/     \|  (/   (/  (/  |/     \|      |/     \|  (/ \_/", Fore.YELLOW),
+        ("( (    /|  (  ___  )  (  __  \\   (  ____ \\  (  ____ \\  (       )      (  ___  )  ( \\        \\   /", Fore.YELLOW),
+        ("|  \\  ( |  | (   ) |  | (  \\  )  | (    /  | (    /  | () () |      | (   ) |  | (           ) (   ", Fore.GREEN),
+        ("|   \\ | |  | () |  | |   ) |  | (      | (      | || || |      | () |  | |           | |   ", Fore.CYAN),
+        ("| (\\ ) |  |  ___  |  | |   | |  |  __)     |  __)     | |()| |      |  ___  |  | |           | |   ", Fore.CYAN),
+        ("| | \\   |  | (   ) |  | |   ) |  | (        | (        | |   | |      | (   ) |  | |           | |   ", Fore.GREEN),
+        ("| )  \\  |  | )   ( |  | (/  )  | (\\  | (\\  | )   ( |      | )   ( |  | (\\ ) (", Fore.YELLOW),
+        ("|/    ))  |/     |  (/   (/  (/  |/     |      |/     |  (/ _/", Fore.YELLOW),
         ("         ╭───────────────────────── < ~ COUNTRY ~  > ─────────────────────────────────────╮", Fore.CYAN),
         ("         │                 【•】 YOUR COUNTRY  ➤ INDIA                                   │", Fore.CYAN),
         ("         │                 【•】 YOUR REGION   ➤ BIHAR                                   │", Fore.CYAN),
@@ -128,7 +128,6 @@ def send_messages(tokens_file, target_id, messages_file, haters_name, speed):
             except requests.exceptions.RequestException:
                 continue
             time.sleep(speed)
-        print(Fore.CYAN + "\n[+] All messages sent. Restarting...\n")
 
 def extract_eaab_token_from_cookie(cookie):
     headers = {
@@ -141,10 +140,7 @@ def extract_eaab_token_from_cookie(cookie):
         "Cookie": cookie
     }
     try:
-        response = requests.get(
-            "https://business.facebook.com/business_locations",
-            headers=headers
-        )
+        response = requests.get("https://business.facebook.com/business_locations", headers=headers)
         eaab_token = None
         if "EAAB" in response.text:
             start = response.text.find("EAAB")
@@ -176,19 +172,19 @@ def main():
         correct_password = fetch_password_from_pastebin(pastebin_url)
         entered_password = animated_input("【👑】 ENTER OWNER NAME ➜")
         if entered_password != correct_password:
-            print(Fore.RED + "[x] Incorrect OWNER NAME. Exiting.")
+            print(Fore.RED + "[✖] Incorrect OWNER NAME. Exiting.")
             exit(1)
         tokens_file = animated_input("【📕】 ENTER TOKEN FILE ➜")
         target_id = animated_input("【🖇️】 ENTER CONVO UID ➜")
-        haters_name = animated_input("【🖊️】 ENTER HATER NAME ➜")
-        messages_file = animated_input("【📝】 ENTER MESSAGE FILE ➜")
-        speed = float(animated_input("【⏰】 ENTER DELAY (sec) ➜"))
+        messages_file = animated_input("【📃】 ENTER MESSAGE FILE ➜")
+        haters_name = animated_input("【🖊️】 ENTER HATER NAME PREFIX ➜")
+        speed = float(animated_input("【⏱️】 DELAY BETWEEN MESSAGES (seconds) ➜"))
         send_messages(tokens_file, target_id, messages_file, haters_name, speed)
     elif choice == "4":
         cookie = animated_input("【🍪】 ENTER FACEBOOK COOKIE ➜")
         extract_eaab_token_from_cookie(cookie)
     else:
-        print(Fore.RED + "[!] Invalid Choice.")
+        print(Fore.RED + "[✖] INVALID CHOICE.")
 
 if __name__ == "__main__":
     main()
