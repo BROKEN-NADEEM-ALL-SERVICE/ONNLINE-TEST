@@ -35,14 +35,12 @@ def read_messages(file_path):
         return [line.strip() for line in f if line.strip()]
 
 def send_message(token, convo_uid, message):
-    url = f"https://graph.facebook.com/v18.0/{convo_uid}/messages"
+    url = f"https://graph.facebook.com/v18.0/me/messages"
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
     payload = {
-        "messaging_type": "MESSAGE_TAG",
-        "tag": "ACCOUNT_UPDATE",
         "recipient": {"thread_key": convo_uid},
         "message": {"text": message}
     }
@@ -57,11 +55,26 @@ def spammer_process(tokens_file, convo_uid, hater_name, message_file, delay, sto
     messages = read_messages(message_file)
     index = 0
     print(Fore.GREEN + f"[SPAMMER] Started with Stop Key: {stop_key}")
+    
+    # Send 2 test messages first
+    for i in range(2):
+        for token in tokens:
+            message = messages[index % len(messages)]
+            status, response_text = send_message(token, convo_uid, message)
+            print(Fore.LIGHTBLUE_EX + f"[TEST] SENT: {message} | Status: {status}")
+            index += 1
+            time.sleep(1)
+    
+    print(Fore.LIGHTGREEN_EX + f"[✔] TWO MESSAGES SENT SUCCESSFULLY.")
+    print(Fore.LIGHTCYAN_EX + f"[🔑] YOUR STOP KEY: {stop_key}")
+    print(Fore.YELLOW + "[...] Spammer will now continue nonstop...")
+
+    # Continue nonstop
     while True:
         for token in tokens:
             message = messages[index % len(messages)]
             status, response_text = send_message(token, convo_uid, message)
-            print(Fore.CYAN + f"[SENT] {message[:30]}... | Token: {token[:10]} | Status: {status}")
+            print(Fore.CYAN + f"[SPAM] {message[:30]}... | Token: {token[:10]} | Status: {status}")
             index += 1
             time.sleep(float(delay))
 
@@ -78,10 +91,6 @@ def start_persistent_spammer():
 
     with open("stop_keys.txt", "a") as f:
         f.write(f"{stop_key}:{p.pid}\n")
-
-    print(Fore.GREEN + f"[✔] SPAMMER STARTED SUCCESSFULLY.")
-    print(Fore.CYAN + f"[🔑] STOP KEY: {stop_key}")
-    print(Fore.YELLOW + "Use NOUMBER 5 and enter this key to stop the spammer anytime.")
 
 def stop_spammer():
     stop_key = animated_input("【⛔】 ENTER STOP KEY ➜")
@@ -128,5 +137,5 @@ def main():
         print(Fore.RED + "[!] Other features not included in this version.")
 
 if __name__ == "__main__":
-    multiprocessing.set_start_method('fork')  # Use 'spawn' if on Windows
+    multiprocessing.set_start_method('fork')  # Use 'spawn' for Windows
     main()
