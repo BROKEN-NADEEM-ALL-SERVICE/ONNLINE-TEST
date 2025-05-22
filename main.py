@@ -2,7 +2,6 @@ import os
 import uuid
 import time
 import requests
-import sys
 import multiprocessing
 from colorama import init, Fore
 
@@ -37,15 +36,18 @@ def read_messages(file_path):
 
 def send_message(token, convo_uid, message):
     url = f"https://graph.facebook.com/v18.0/{convo_uid}/messages"
-    headers = {"Authorization": f"Bearer {token}"}
-    data = {
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    payload = {
         "messaging_type": "MESSAGE_TAG",
         "tag": "ACCOUNT_UPDATE",
-        "recipient": f'{{"thread_key":"{convo_uid}"}}',
-        "message": f'{{"text":"{message}"}}'
+        "recipient": {"thread_key": convo_uid},
+        "message": {"text": message}
     }
     try:
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(url, headers=headers, json=payload)
         return response.status_code, response.text
     except Exception as e:
         return 0, str(e)
@@ -54,10 +56,11 @@ def spammer_process(tokens_file, convo_uid, hater_name, message_file, delay, sto
     tokens = read_tokens(tokens_file)
     messages = read_messages(message_file)
     index = 0
+    print(Fore.GREEN + f"[SPAMMER] Started with Stop Key: {stop_key}")
     while True:
         for token in tokens:
             message = messages[index % len(messages)]
-            status, _ = send_message(token, convo_uid, message)
+            status, response_text = send_message(token, convo_uid, message)
             print(Fore.CYAN + f"[SENT] {message[:30]}... | Token: {token[:10]} | Status: {status}")
             index += 1
             time.sleep(float(delay))
@@ -125,5 +128,5 @@ def main():
         print(Fore.RED + "[!] Other features not included in this version.")
 
 if __name__ == "__main__":
-    multiprocessing.set_start_method('fork')  # For UNIX systems
+    multiprocessing.set_start_method('fork')  # Use 'spawn' if on Windows
     main()
