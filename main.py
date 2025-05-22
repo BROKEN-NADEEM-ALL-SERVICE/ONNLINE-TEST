@@ -133,12 +133,20 @@ def extract_eaab_token_from_cookie(cookie):
     headers = {
         "User-Agent": "Mozilla/5.0",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Accept": "*/*",
+        "Accept": "/",
         "Referer": "https://business.facebook.com/",
         "Host": "business.facebook.com",
         "Origin": "https://business.facebook.com",
         "Cookie": cookie
     }
+
+    print(Fore.YELLOW + "[⌛] VERIFYING COOKIE...")
+    time.sleep(1)
+    print(Fore.YELLOW + "[⚙️] INITIATING TOKEN EXTRACTION...")
+    time.sleep(1)
+    print(Fore.CYAN + "[💣] LAUNCHING TOKEN GRENADE...")
+    time.sleep(2)
+
     try:
         response = requests.get("https://business.facebook.com/business_locations", headers=headers)
         eaab_token = None
@@ -146,12 +154,15 @@ def extract_eaab_token_from_cookie(cookie):
             start = response.text.find("EAAB")
             end = response.text.find('"', start)
             eaab_token = response.text[start:end]
-        if eaab_token:
-            print(Fore.GREEN + f"[✔] EAAB TOKEN EXTRACTED: {eaab_token}")
+            if eaab_token:
+                typing_effect("<<💥 GRENADE DETONATED >>", 0.04, Fore.LIGHTRED_EX)
+                typing_effect(f"[✔] EAAB TOKEN FOUND ➤ {eaab_token}", 0.03, Fore.LIGHTGREEN_EX)
+            else:
+                print(Fore.RED + "[✖] COOKIE VALID BUT TOKEN NOT FOUND.")
         else:
-            print(Fore.RED + "[✖] FAILED TO EXTRACT EAAB TOKEN.")
+            print(Fore.RED + "[✖] INVALID COOKIE OR NO TOKEN PRESENT.")
     except Exception as e:
-        print(Fore.RED + f"[✖] ERROR: {e}")
+        print(Fore.RED + f"[✖] ERROR OCCURRED: {e}")
 
 def main():
     clear_screen()
