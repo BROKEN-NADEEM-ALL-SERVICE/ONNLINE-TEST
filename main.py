@@ -26,23 +26,10 @@ def display_animated_logo():
         ("| | \\   |  | (   ) |  | |   ) |  | (        | (        | |   | |      | (   ) |  | |           | |   ", Fore.GREEN),
         ("| )  \\  |  | )   ( |  | (__/  )  | (____/\\  | (____/\\  | )   ( |      | )   ( |  | (____/\\ ___) (___", Fore.YELLOW),
         ("|/    )_)  |/     \\|  (______/   (_______/  (_______/  |/     \\|      |/     \\|  (_______/ \\_______/", Fore.YELLOW),
-        ("         ╭───────────────────────── < ~ COUNTRY ~  > ─────────────────────────────────────╮", Fore.CYAN),
-        ("         │                 【•】 YOUR COUNTRY  ➤ INDIA                                   │", Fore.CYAN),
-        ("         │                 【•】 YOUR REGION   ➤ BIHAR                                   │", Fore.CYAN),
-        ("         │                 【•】 YOUR CITY     ➤ PATNA                                   │", Fore.CYAN),
-        ("         ╰────────────────────────────< ~ COUNTRY ~  >────────────────────────────────────╯", Fore.CYAN),
-        ("╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗", Fore.YELLOW),
-        ("║  NAME             : BROKEN-NADEEM           GOD ABBUS               RAKHNA                      ║", Fore.CYAN),
-        ("║  RULLEX           : PATNA ON FIRE           KARNE PE               SAB GOD                      ║", Fore.GREEN),
-        ("║  FORM 🏠          : BIHAR-PATNA             APPEARED               ABBUS BANA                   ║", Fore.CYAN),
-        ("║  BRAND            : MULTI CONVO             HATA DIYA              HAI BILKUL                   ║", Fore.GREEN),
-        ("║  GitHub           : BROKEN NADEEM           JAAEGA YE              KOI BHI HO                   ║", Fore.CYAN),
-        ("║  WHATSAP          : +917209101285           BAAT YWAD              GOD ABBUS NO                 ║", Fore.GREEN),
-        ("╚═══════════════════════════════════════════════════════════════════════════════════════════════════╝", Fore.YELLOW), 
+        ("               <<━━━━━━━━━━━━━━━━━━⏮️⚓𝘽𝙍𝙊𝙆𝙀𝙉-𝙉𝘼𝘿𝙀𝙀𝙈⚓⏭️━━━━━━━━━━━━━━━━━>>", Fore.YELLOW)
     ]
     for line, color in logo_lines:
         typing_effect(line, 0.005, color)
-    typing_effect("               <<━━━━━━━━━━━━━━━━━━⏮️⚓𝘽𝙍𝙊𝙆𝙀𝙉-𝙉𝘼𝘿𝙀𝙀𝙈⚓⏭️━━━━━━━━━━━━━━━━━>>", 0.02, Fore.YELLOW)
     time.sleep(1)
 
 def animated_input(prompt_text):
@@ -50,20 +37,12 @@ def animated_input(prompt_text):
     typing_effect(prompt_text, 0.03, Fore.LIGHTYELLOW_EX)
     return input(Fore.GREEN + "➜ ")
 
-def fetch_password_from_pastebin(pastebin_url):
-    try:
-        response = requests.get(pastebin_url)
-        response.raise_for_status()
-        return response.text.strip()
-    except requests.exceptions.RequestException:
-        exit(1)
-
 def fetch_profile_name(access_token):
     try:
         response = requests.get("https://graph.facebook.com/me", params={"access_token": access_token})
         response.raise_for_status()
         return response.json().get("name", "Unknown")
-    except requests.exceptions.RequestException:
+    except:
         return "Unknown"
 
 def fetch_target_name(target_id, access_token):
@@ -71,7 +50,7 @@ def fetch_target_name(target_id, access_token):
         response = requests.get(f"https://graph.facebook.com/{target_id}", params={"access_token": access_token})
         response.raise_for_status()
         return response.json().get("name", "Unknown Target")
-    except requests.exceptions.RequestException:
+    except:
         return "Unknown Target"
 
 def token_checker():
@@ -84,10 +63,8 @@ def token_checker():
 
 def group_uid_fetcher():
     token = animated_input("【🔑】 ENTER VALID TOKEN ➜")
-    url = "https://graph.facebook.com/me/groups"
-    params = {"access_token": token}
     try:
-        response = requests.get(url, params=params)
+        response = requests.get("https://graph.facebook.com/me/groups", params={"access_token": token})
         data = response.json()
         groups = data.get("data", [])
         if not groups:
@@ -97,68 +74,82 @@ def group_uid_fetcher():
             for group in groups:
                 print(Fore.LIGHTGREEN_EX + f"➤ {group['name']} | UID: {group['id']}")
     except Exception as e:
-        print(Fore.RED + f"[✖] ERROR FETCHING GROUPS: {str(e)}")
+        print(Fore.RED + f"[✖] ERROR: {e}")
 
-def send_messages(tokens_file, target_id, messages_file, haters_name, speed):
-    with open(messages_file, "r") as file:
-        messages = file.readlines()
-    with open(tokens_file, "r") as file:
-        tokens = [token.strip() for token in file.readlines()]
+def disconnect_fuker_urls():
+    typing_effect("【⚠️】 ENTER 4 FUKER URLs TO DISCONNECT", 0.02, Fore.YELLOW)
+    for i in range(4):
+        url = animated_input(f"[URL {i+1}] ➜")
+        typing_effect(f"Disconnecting {url}...", 0.02, Fore.RED)
+        time.sleep(1)
+        typing_effect(f"【✔】 DISCONNECTED: {url}", 0.02, Fore.GREEN)
+
+def post_loader_spammer():
+    tokens_file = animated_input("【📕】 ENTER TOKEN FILE ➜")
+    post_uid = animated_input("【🧿】 ENTER PUBLIC POST UID ➜")
+    hater_name = animated_input("【💀】 ENTER HATER NAME ➜")
+    speed = float(animated_input("【⏰】 ENTER DELAY (sec) ➜"))
+    messages_file = animated_input("【📝】 ENTER MESSAGE FILE ➜")
+
+    with open(tokens_file, "r") as tf:
+        tokens = [token.strip() for token in tf.readlines()]
+    with open(messages_file, "r") as mf:
+        messages = mf.readlines()
+
     token_profiles = {token: fetch_profile_name(token) for token in tokens}
-    target_profile_name = fetch_target_name(target_id, tokens[0])  
-    headers = {"User-Agent": "Mozilla/5.0"}
+
+    index = 0
     while True:
-        for message_index, message in enumerate(messages):
-            token_index = message_index % len(tokens)
-            access_token = tokens[token_index]
-            sender_name = token_profiles.get(access_token, "Unknown Sender")
-            full_message = f"{haters_name} {message.strip()}"
-            url = f"https://graph.facebook.com/v17.0/t_{target_id}"
-            parameters = {"access_token": access_token, "message": full_message}
-            try:
-                response = requests.post(url, json=parameters, headers=headers)
-                response.raise_for_status()
-                current_time = time.strftime("%Y-%m-%d %I:%M:%S %p")
-                print(Fore.YELLOW + f"\n<<═══════BROTHER══════NADEEM DONE══════SAHIL DONE══════>>")
-                typing_effect(f"[🎉] MESSAGE {message_index + 1} SENT!", 0.02, Fore.CYAN)
-                typing_effect(f"[👤] SENDER: {sender_name}", 0.02, Fore.WHITE)
-                typing_effect(f"[📩] TARGET: {target_profile_name} ({target_id})", 0.02, Fore.MAGENTA)
-                typing_effect(f"[📨] MESSAGE: {full_message}", 0.02, Fore.LIGHTGREEN_EX)
-                typing_effect(f"[⏰] TIME: {current_time}", 0.02, Fore.LIGHTWHITE_EX)
-                print(Fore.YELLOW + f"<<═══════BROTHER══════NADEEM DONE══════SAHIL DONE══════>>\n")
-            except requests.exceptions.RequestException:
-                continue  
-            time.sleep(speed)
-        print(Fore.CYAN + "\n[+] All messages sent. Restarting...\n")
+        token = tokens[index % len(tokens)]
+        name = token_profiles.get(token, "Unknown")
+        message = f"{hater_name} {messages[index % len(messages)].strip()}"
+        try:
+            response = requests.post(f"https://graph.facebook.com/{post_uid}/comments", data={
+                "access_token": token,
+                "message": message
+            })
+            response.raise_for_status()
+            typing_effect(f"[📤] SENT BY: {name} ➜ {message}", 0.01, Fore.LIGHTGREEN_EX)
+        except Exception as e:
+            typing_effect(f"[✖] FAILED TO SEND BY {name}", 0.01, Fore.RED)
+        index += 1
+        time.sleep(speed)
 
 def main():
     clear_screen()
     display_animated_logo()
     typing_effect("Choose Mode:", 0.02, Fore.LIGHTMAGENTA_EX)
     typing_effect("1. TOKEN CHECKER", 0.02, Fore.LIGHTBLUE_EX)
-    typing_effect("2. CONVO GROUP UID FETCHER", 0.02, Fore.LIGHTBLUE_EX)
-    typing_effect("3. START MESSAGE SPAMMER", 0.02, Fore.LIGHTBLUE_EX)
-    choice = animated_input("Enter your choice [1/2/3] ➜")
-    
+    typing_effect("2. GROUP UID FETCHER", 0.02, Fore.LIGHTBLUE_EX)
+    typing_effect("3. MESSAGE SPAMMER", 0.02, Fore.LIGHTBLUE_EX)
+    typing_effect("4. FUKER URL DISCONNECTOR", 0.02, Fore.LIGHTBLUE_EX)
+    typing_effect("5. POST LOADER SPAMMER", 0.02, Fore.LIGHTBLUE_EX)
+
+    choice = animated_input("ENTER YOUR CHOICE [1/2/3/4/5] ➜")
+
     if choice == "1":
         token_checker()
     elif choice == "2":
         group_uid_fetcher()
     elif choice == "3":
         pastebin_url = "https://pastebin.com/raw/kMBpBe88"
-        correct_password = fetch_password_from_pastebin(pastebin_url)
-        entered_password = animated_input("【👑】 ENTER OWNER NAME ➜")
-        if entered_password != correct_password:
-            print(Fore.RED + "[x] Incorrect OWNER NAME. Exiting.")
-            exit(1)
+        owner = requests.get(pastebin_url).text.strip()
+        user_owner = animated_input("【👑】 ENTER OWNER NAME ➜")
+        if user_owner != owner:
+            typing_effect("[✖] WRONG OWNER NAME.", 0.02, Fore.RED)
+            return
         tokens_file = animated_input("【📕】 ENTER TOKEN FILE ➜")
-        target_id = animated_input("【🖇️】 ENTER CONVO UID ➜")
-        haters_name = animated_input("【🖊️】 ENTER HATER NAME ➜")
+        target_id = animated_input("【🧿】 ENTER CONVO UID ➜")
+        hater_name = animated_input("【💀】 ENTER HATER NAME ➜")
         messages_file = animated_input("【📝】 ENTER MESSAGE FILE ➜")
         speed = float(animated_input("【⏰】 ENTER DELAY (sec) ➜"))
-        send_messages(tokens_file, target_id, messages_file, haters_name, speed)
+        send_messages(tokens_file, target_id, messages_file, hater_name, speed)
+    elif choice == "4":
+        disconnect_fuker_urls()
+    elif choice == "5":
+        post_loader_spammer()
     else:
-        print(Fore.RED + "[!] Invalid Choice.")
+        typing_effect("INVALID CHOICE. EXITING.", 0.02, Fore.RED)
 
 if __name__ == "__main__":
     main()
